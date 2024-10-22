@@ -34,4 +34,7 @@ public class Voiture {
     @NonNull
     @JsonIgnore
     private Proprietaire proprietaire; // Associate with Proprietaire
+
+    public Voiture(String miolaCar, String uber, String blanche, String s, int i, int i1) {
+    }
 }
