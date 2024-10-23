@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/voitures") // Ajoutez une annotation de mapping de classe
 public class VoitureController {
 
@@ -32,4 +32,20 @@ public class VoitureController {
         voitureRepo.deleteById(id);
     }
 
+
+    @PutMapping("/edit/{id}") // Modify this route to match the React Link (edit/id)
+    public Voiture updateVoiture(@PathVariable Long id, @RequestBody Voiture updatedVoiture) {
+        return voitureRepo.findById(id).map(voiture -> {
+            voiture.setMarque(updatedVoiture.getMarque());
+            voiture.setModele(updatedVoiture.getModele());
+            voiture.setCouleur(updatedVoiture.getCouleur());
+            voiture.setImmatricule(updatedVoiture.getImmatricule());
+            voiture.setAnnee(updatedVoiture.getAnnee());
+            voiture.setPrix(updatedVoiture.getPrix());
+            return voitureRepo.save(voiture);
+        }).orElseGet(() -> {
+            updatedVoiture.setId(id);
+            return voitureRepo.save(updatedVoiture);
+        });
+}
 }
