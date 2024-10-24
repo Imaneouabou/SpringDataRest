@@ -1,41 +1,52 @@
-version: '3'
+version: '3.8'
 services:
-  postgres:
-    image: postgres
-    container_name: postgres-db
+  mariadb:
+    image: mariadb
+    container_name: mariadb-db
     environment:
-      POSTGRES_DB: springboot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: springboot
+      MYSQL_USER: imaneouabou
+      MYSQL_PASSWORD: 123456
     ports:
-      - "5433:5432"
+      - "3306:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mariadb_data:/var/lib/mysql
     networks:
       - spring-data
+
   voiture-app-backend:
-    image: voiture-app-backend-spring:0.0.1-SNAPSHOT
+    image: voiture-app-backend:latest # Custom image name
+    build:
+      context: .  # Path where the JAR file will be created
+      dockerfile: Dockerfile      # Optional, if you want to specify a Dockerfile name
     container_name: voiture-app-backend
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/springboot
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - mariadb
     networks:
       - spring-data
+
   voiture-front-end:
-    image: voiture-app-frontend
+    image: voiture-app-frontend:latest  # Custom image name for the frontend
+    build:
+      context: ./src/main/webapp/reactjs  # Path to your frontend directory
+      args:
+        NODE_ENV: production  # Optional, can set environment variables for the build
     container_name: voiture-app-frontend
     ports:
       - "3000:80"
     networks:
       - spring-data
+
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -47,13 +58,16 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     ports:
       - "3001:3000"
     depends_on:
       - prometheus
     networks:
       - spring-data
+
 volumes:
-  pgdata:
+  mariadb_data:
+
 networks:
   spring-data:

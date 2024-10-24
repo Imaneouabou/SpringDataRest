@@ -1,8 +1,8 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 5s  # Scrape metrics every 5 seconds
 
 scrape_configs:
-  - job_name: 'voiture-app-backend'
-    metrics_path: '/actuator/prometheus'
+  - job_name: 'voiture-app-backend'  # Job name for identifying the service
+    metrics_path: '/actuator/prometheus'  # Path to scrape metrics from Spring Boot Actuator
     static_configs:
-      - targets: ['voiture-app-backend:8080']
+      - targets: ['voiture-app-backend:8080']  # Targeting the backend service
