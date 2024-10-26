@@ -60,7 +60,7 @@ All services are connected via the app-network to allow seamless communication b
 1. *Clone the repository:*
 
   ```bash
-   git clone https://github.com/FadwaLacham/SpringDataRest.git
+   git clone https://github.com/Imaneouabou/SpringDataRest)
    cd SpringDataRest
 ```
 2. **Build Backend Docker Image**:  
